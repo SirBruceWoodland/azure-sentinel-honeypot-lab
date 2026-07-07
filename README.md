@@ -80,8 +80,6 @@ SecurityEvent
 | project AttackerIP, FailedLogins, Country, Latitude, Longitude
 ```
 
-> 📸 *Screenshot: Final attack map showing global attack origins*
-
 ### Panel 2: Top 10 Attacking Countries Bar Chart
 
 ```kql
@@ -94,7 +92,9 @@ SecurityEvent
 | sort by TotalAttempts desc
 | take 10
 ```
+<img width="792" height="624" alt="image" src="https://github.com/user-attachments/assets/80d188a7-2471-41ab-a7f0-a6d65abd8734" />
 
+> 📸 *Screenshot: Combined workbook attack map + bar chart panel*
 ### Final Attack Map Statistics (All-Time)
 
 | Country | Attempts | Notable ASNs |
@@ -109,8 +109,6 @@ SecurityEvent
 | 🇬🇧 United Kingdom | 26 | Contabo, Kamatera |
 | 🇵🇪 Peru | 22 | Red Cientifica Peruana, ON Empresas |
 | Other | 20 | Romania, Finland, Germany, Belgium, Hong Kong |
-
-> 📸 *Screenshot: Combined workbook attack map + bar chart panel*
 
 ---
 
@@ -136,6 +134,8 @@ The 5,742 NOUSER events represent **automated SSH scanners in a reconnaissance p
 - Enable **Azure Defender for Servers** for additional network-level telemetry
 - Configure **OpenSSH verbose logging** on Windows and ingest via a custom Log Analytics data collection rule
 - Use **Azure Network Watcher NSG flow logs** to capture all connection-level data regardless of authentication outcome
+
+<img width="792" height="624" alt="image" src="https://github.com/user-attachments/assets/34a892c5-61bb-437b-9d1b-4001bfd95085" />
 
 > 📸 *Screenshot: KQL results showing top attacking IPs with failed login counts*
 
@@ -211,6 +211,8 @@ W3CIISLog
 
 ## Analytics Rules
 
+<img width="792" height="624" alt="image" src="https://github.com/user-attachments/assets/9de49c9a-1038-4386-bf59-ce1ec3bfe1c6" />
+
 > 📸 *Screenshot: Analytics page showing both rules active with MITRE ATT&CK tags*
 
 ### Rule 1: Brute Force Detection - Failed Logons
@@ -273,6 +275,8 @@ Full SOC incident response workflow executed for the primary threat actor (`45.1
 | **4. Investigation** | KQL confirmed zero successful logons from attacker IP. Anonymous network scans assessed as low-risk (Logon Type 3, no credentials). |
 | **5. Remediation** | NSG inbound deny rule added for `45.142.193.166` (Priority 200) to block further access at the network perimeter. |
 | **6. Closure** | Incident classified: **True Positive — Malicious user activity**. Status: Resolved. Official Microsoft Security incident report exported as PDF. |
+
+<img width="792" height="624" alt="image" src="https://github.com/user-attachments/assets/db05c60f-6bff-430c-aef7-9e38ccafb726" />
 
 > 📸 *Screenshot: Resolved incident showing investigation notes, True Positive classification, and audit trail*
 
