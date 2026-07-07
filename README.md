@@ -1,6 +1,6 @@
 # Azure Sentinel SIEM Honeypot Lab
 
-**Cybersecurity Portfolio Project — Edward Antonucci — June 2026**
+**Cybersecurity Portfolio Project - Edward Antonucci - June 2026**
 
 ---
 
@@ -24,7 +24,9 @@ This project demonstrates end-to-end deployment and operation of a cloud-native 
 | SSH Probe Events (NOUSER) | 5,742+ |
 | IIS Web Probe Requests | 599+ |
 
-> 📸 *Screenshot: Microsoft Sentinel Overview Dashboard — 80.8K events, 95 alerts, 6 incidents*
+<img width="792" height="624" alt="image" src="https://github.com/user-attachments/assets/8600c070-2ae0-4ecc-b8ea-bd0560845421" />
+
+> 📸 *Screenshot: Microsoft Sentinel Overview Dashboard - 80.8K events, 95 alerts, 6 incidents*
 
 ---
 
@@ -34,20 +36,20 @@ All resources deployed in a dedicated resource group (`RG-Sentinel-Lab`, West US
 
 | Component | Details |
 |---|---|
-| **Log Analytics Workspace** | `LAW-Sentinel-Lab` — centralized data store |
+| **Log Analytics Workspace** | `LAW-Sentinel-Lab` - centralized data store |
 | **Microsoft Sentinel** | SIEM layer on top of the workspace |
 | **Honeypot VM** | Windows Server 2022 Datacenter, Standard D2s v3 |
-| **Network Security Group** | `DANGER_AllowAnyInbound` rule — all ports exposed; targeted deny added during IR |
-| **Data Collection Rule** | `DCR-Honeypot` — Azure Monitor Agent streaming Security Events + IIS logs |
+| **Network Security Group** | `DANGER_AllowAnyInbound` rule - all ports exposed; targeted deny added during IR |
+| **Data Collection Rule** | `DCR-Honeypot` - Azure Monitor Agent streaming Security Events + IIS logs |
 | **Exposed Services** | RDP (3389), SSH (22 via OpenSSH), HTTP (80 via IIS) |
 
 ### Why Disable the Firewall?
 
-The Windows Firewall was disabled and NSG inbound was set to allow all traffic to maximize honeypot effectiveness. In production, this would be a catastrophic misconfiguration — here it's intentional to create the highest possible attack surface and observe what automated scanners and botnets probe first.
+The Windows Firewall was disabled and NSG inbound was set to allow all traffic to maximize honeypot effectiveness. In production, this would be a catastrophic misconfiguration, but here it's intentional to create the highest possible attack surface and observe what automated scanners and botnets probe first.
 
 ### Why Priority 200 for the Deny Rule?
 
-NSG rules are evaluated lowest-number-first. Priority 100 was already taken by `DANGER_AllowAnyInbound`, so the attacker-specific deny rule was placed at priority 200. In production, the "allow-all" rule would not exist — targeted deny rules would sit at a low priority number above more permissive rules.
+NSG rules are evaluated lowest-number-first. Priority 100 was already taken by `DANGER_AllowAnyInbound`, so the attacker-specific deny rule was placed at priority 200. In production, the "allow-all" rule would not exist and targeted deny rules would sit at a low priority number above more permissive rules.
 
 ---
 
@@ -57,7 +59,7 @@ A multi-panel Sentinel Workbook visualizes attack traffic in real time with 5-mi
 
 ### Workbook Description (Title Block)
 
-> **Real-Time Global Attack Map — Azure Sentinel Honeypot Lab**
+> **Real-Time Global Attack Map from Azure Sentinel Honeypot Lab**
 >
 > This dashboard visualizes live attack traffic captured by a Windows Server 2022 honeypot deployed on Microsoft Azure. The honeypot intentionally exposes RDP (3389), SSH (22), and HTTP (80) to the public internet to attract real-world threat actors and automated scanners.
 >
@@ -65,7 +67,7 @@ A multi-panel Sentinel Workbook visualizes attack traffic in real time with 5-mi
 >
 > All data shown is real, unsolicited attack traffic from external threat actors.
 
-### Panel 1 — Global Attack Map
+### Panel 1: Global Attack Map
 
 IP addresses geo-enriched via custom Sentinel Watchlist (`AttackerGeoDataV2`) populated with latitude/longitude from ipinfo.io. Heatmap scaled by failed login count.
 
@@ -80,7 +82,7 @@ SecurityEvent
 
 > 📸 *Screenshot: Final attack map showing global attack origins*
 
-### Panel 2 — Top 10 Attacking Countries Bar Chart
+### Panel 2: Top 10 Attacking Countries Bar Chart
 
 ```kql
 SecurityEvent
@@ -108,7 +110,7 @@ SecurityEvent
 | 🇵🇪 Peru | 22 | Red Cientifica Peruana, ON Empresas |
 | Other | 20 | Romania, Finland, Germany, Belgium, Hong Kong |
 
-> 📸 *Screenshot: Combined workbook — attack map + bar chart panel*
+> 📸 *Screenshot: Combined workbook attack map + bar chart panel*
 
 ---
 
@@ -130,7 +132,7 @@ The 5,742 NOUSER events represent **automated SSH scanners in a reconnaissance p
 
 ### How to Capture SSH IPs Properly (Production Approach)
 
-- Deploy a **Linux VM** alongside the honeypot — Linux `sshd` logs capture full IP context
+- Deploy a **Linux VM** alongside the honeypot - Linux `sshd` logs capture full IP context
 - Enable **Azure Defender for Servers** for additional network-level telemetry
 - Configure **OpenSSH verbose logging** on Windows and ingest via a custom Log Analytics data collection rule
 - Use **Azure Network Watcher NSG flow logs** to capture all connection-level data regardless of authentication outcome
@@ -141,7 +143,7 @@ The 5,742 NOUSER events represent **automated SSH scanners in a reconnaissance p
 
 ## KQL Queries Written
 
-### Event Inventory — All Security Event Types
+### Event Inventory - All Security Event Types
 ```kql
 SecurityEvent
 | summarize count() by EventID, Activity
@@ -211,7 +213,7 @@ W3CIISLog
 
 > 📸 *Screenshot: Analytics page showing both rules active with MITRE ATT&CK tags*
 
-### Rule 1: Brute Force Detection — Failed Logons
+### Rule 1: Brute Force Detection - Failed Logons
 
 | Setting | Value |
 |---|---|
@@ -237,7 +239,7 @@ W3CIISLog
 
 ---
 
-## Automated Response — Logic App Playbook
+## Automated Response - Logic App Playbook
 
 A Logic App playbook (`Notify-BruteForce-Alert`) was built to automate incident notification. The playbook uses the Microsoft Sentinel incident trigger and sends an HTTP POST to ntfy.sh when a brute force incident fires.
 
@@ -278,10 +280,10 @@ Full SOC incident response workflow executed for the primary threat actor (`45.1
 
 ## Threat Intelligence Observations
 
-### Contabo GmbH — Recurring Infrastructure
+### Contabo GmbH - Recurring Infrastructure
 Contabo GmbH (AS51167), a low-cost German VPS provider, appeared across France, Singapore, and other regions. Contabo is frequently cited in threat intel reports as infrastructure heavily abused by attackers due to low cost, minimal identity verification, and historically slow abuse response.
 
-### SKYNET NETWORK LTD — Top Attacker
+### SKYNET NETWORK LTD - Top Attacker
 The top attacker, SKYNET NETWORK LTD (AS214295, Netherlands), accumulated **441 failed logon attempts** across 3 IPs in the same /24 subnet (`45.142.193.x`). Multiple IPs from one ASN targeting simultaneously indicates an **automated botnet operation**, not a manual attacker.
 
 ### Coordinated Botnet Behavior
@@ -291,7 +293,7 @@ Multiple IPs sharing the same ASN were observed targeting the honeypot simultane
 
 ## Data Connectors Active
 
-- Windows Security Events via AMA *(primary — honeypot VM logs)*
+- Windows Security Events via AMA *(primary - honeypot VM logs)*
 - Azure Activity
 - Microsoft Defender XDR
 - Microsoft Defender for Endpoint
